@@ -1,49 +1,38 @@
-import { View, Text, SafeAreaView,StyleSheet } from "react-native"
-import React, { useEffect, useState } from 'react'
-import axios from "axios"
+import React from 'react'
+import Users from './Users';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Settings from './Settings';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Hearing from './Hearing';
+import Activity from './Activity';
 
-const App = ()=>{
-  const [users, setUsers] = useState([])
-  useEffect(()=>{
-     getUsers()
-  },[])
-  const getUsers = async()=>{
-  // fetch('https://reqres.in/api/users?page=2')
-  //  .then(r => r.json())
-  //  .then(d => console.log('d here:', setUsers(d.data)))
-  //  .catch(err=> console.log(err))
-    try{
-      let res = await axios.get('https://reqres.in/api/users?page=2')
-      console.log('res', res)
-      setUsers(res.data.data)
-     }catch(err){
-      console.log('err', err)
-    }
-    // axios.get('')
-    // .then(res=>{ res.data.data is users})
-    // .catch(err=>console.log(err))
-  }
 
-  
+const Tab = createBottomTabNavigator()
+const Stack = createNativeStackNavigator()
 
-  return (
-    <SafeAreaView style={styles.container}>
-    <View style={styles.container}>
-      <Text>Hello</Text>
-      <Text>{JSON.stringify(users)}</Text>
-    </View>
-    </SafeAreaView>
+const SettingsStack = () => {
+  return(
+    <Stack.Navigator initialRouteName='Settings'>
+      <Stack.Screen name ='Settings' component={Settings} />
+      <Stack.Screen name ='Hearing' component={Hearing}  />
+      <Stack.Screen name ='Activity' component={Activity}  />
+
+
+    </Stack.Navigator>
   )
 }
+const App = () => {
 
-const styles = StyleSheet.create({
-   container:{
-     display:'flex',
-     flex:1,
-     justifyContent:'center',
-     borderColor:'red',
-     borderWidth: 3,
-   }
-})
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name='Users' component={Users} />
+        <Tab.Screen name='Settings' component={SettingsStack} />
 
+      </Tab.Navigator>
+    </NavigationContainer>
+    
+  );
+};
 export default App
